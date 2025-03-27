@@ -1,15 +1,38 @@
-import timeit
+from collections import defaultdict
+from itertools import accumulate
 
 def main():
-    print(cache_int_finder(100))
+    target_count = 59
+    accumulated = cache_int_finder(100, target_count)
+    final_sol = {}
 
-def cache_int_finder(k: int):
+    for key, value in accumulated.items():
+        if value == target_count:
+            final_sol.update({key: value})
+            break
+
+    for key, value in accumulated.items():
+        if final_sol == {}:
+            break
+        if value > target_count:
+            final_sol.update({key: value})
+            break
+
+    if final_sol:
+        m, M = final_sol.keys()
+        print(final_sol)
+        print(M + m -1)
+    else:
+        print("No value of k has exactly {target_count} solutions.")
+
+def cache_int_finder(k: int, ordered_pair_count: int):
     if k <= 2:
         return None
     solutions = []
     a_cache = {}
     c_cache = {}
     target = 24**(1/5)
+    k_count = defaultdict(int)
     # >= 16 causes false negatives and <= 6 causes false positives
     epsilon = 1e-15 # answer precision
 
@@ -20,46 +43,19 @@ def cache_int_finder(k: int):
         for d in range(2, k):
             c_cache[(c, d)] = c**(1/d)
 
-    for a_keys, a_items in a_cache.items():
-        for c_keys, c_items in c_cache.items():
-            if abs((a_items * c_items) - target) < epsilon:
-                solutions.append(list(a_keys)+list(c_keys))
+    for a_key, a_item in a_cache.items():
+        for c_key, c_item in c_cache.items():
+            if abs((a_item * c_item) - target) < epsilon:
+                ordered_pair = list(a_key)+list(c_key)
+                k_magnitude = max(ordered_pair)
+                k_count[k_magnitude] += 1
+                solutions.append(list(a_key)+list(c_key))
 
-    return len(solutions), solutions
+    sorted_dict = {}
+    for key in sorted(k_count):
+        sorted_dict[key] = k_count[key]
+    acc_dict = {key:value for key, value in zip(sorted_dict.keys(), accumulate(sorted_dict.values()))}
+    return acc_dict
 
 if __name__ == "__main__":
     main()
-
-    """
-    Return of too low epsilon vs appropriately high epsilon if k = 100
-    low_ep = (85, [[2, 2, 18, 10], [2, 5, 12, 5], [3, 5, 8, 5], [3, 5, 64, 10], [4, 4, 18, 10], [4, 5, 6, 5], 
-    [4, 5, 36, 10], [4, 10, 12, 5], [6, 5, 4, 5], [6, 5, 16, 10], [6, 5, 64, 15], [6, 10, 96, 10], [7, 73, 71, 7], 
-    [8, 5, 3, 5], [8, 5, 9, 10], [8, 5, 27, 15], [8, 5, 81, 20], [8, 6, 18, 10], [8, 10, 72, 10], [8, 15, 12, 5], 
-    [9, 10, 8, 5], [9, 10, 64, 10], [12, 5, 2, 5], [12, 5, 4, 10], [12, 5, 8, 15], [12, 5, 16, 20], [12, 5, 32, 25], 
-    [12, 5, 64, 30], [12, 10, 48, 10], [12, 67, 66, 7], [16, 8, 18, 10], [16, 10, 6, 5], [16, 10, 36, 10], [16, 20, 12, 5], 
-    [18, 10, 2, 2], [18, 10, 4, 4], [18, 10, 8, 6], [18, 10, 16, 8], [18, 10, 32, 10], [18, 10, 64, 12], [18, 35, 48, 7], 
-    [24, 6, 24, 30], [24, 10, 24, 10], [24, 30, 24, 6], [27, 8, 56, 18], [27, 15, 8, 5], [27, 15, 64, 10], [30, 79, 35, 6], 
-    [32, 10, 18, 10], [32, 25, 12, 5], [35, 6, 30, 79], [36, 10, 4, 5], [36, 10, 16, 10], [36, 10, 64, 15], [36, 20, 96, 10], 
-    [38, 7, 65, 36], [43, 86, 63, 7], [46, 7, 92, 51], [46, 8, 95, 29], [47, 12, 82, 14], [48, 7, 18, 35], [48, 10, 12, 10], 
-    [56, 18, 27, 8], [63, 7, 43, 86], [64, 10, 3, 5], [64, 10, 9, 10], [64, 10, 27, 15], [64, 10, 81, 20], [64, 12, 18, 10], 
-    [64, 15, 6, 5], [64, 15, 36, 10], [64, 20, 72, 10], [64, 30, 12, 5], [65, 36, 38, 7], [66, 7, 12, 67], [71, 7, 7, 73], 
-    [72, 10, 8, 10], [72, 10, 64, 20], [81, 20, 8, 5], [81, 20, 64, 10], [82, 14, 47, 12], [92, 51, 46, 7], [95, 29, 46, 8], 
-    [96, 10, 6, 10], [96, 10, 36, 20]])
-
-    high_ep = (67, [[2, 2, 18, 10], [2, 5, 12, 5], [3, 5, 8, 5], [3, 5, 64, 10], [4, 4, 18, 10], [4, 5, 6, 5], 
-    [4, 5, 36, 10], [4, 10, 12, 5], [6, 5, 4, 5], [6, 5, 16, 10], [6, 5, 64, 15], [6, 10, 96, 10], [8, 5, 3, 5], 
-    [8, 5, 9, 10], [8, 5, 27, 15], [8, 5, 81, 20], [8, 6, 18, 10], [8, 10, 72, 10], [8, 15, 12, 5], [9, 10, 8, 5], 
-    [9, 10, 64, 10], [12, 5, 2, 5], [12, 5, 4, 10], [12, 5, 8, 15], [12, 5, 16, 20], [12, 5, 32, 25], [12, 5, 64, 30], 
-    [12, 10, 48, 10], [16, 8, 18, 10], [16, 10, 6, 5], [16, 10, 36, 10], [16, 20, 12, 5], [18, 10, 2, 2], [18, 10, 4, 4], 
-    [18, 10, 8, 6], [18, 10, 16, 8], [18, 10, 32, 10], [18, 10, 64, 12], [18, 35, 48, 7], [24, 6, 24, 30], [24, 10, 24, 10], 
-    [24, 30, 24, 6], [27, 15, 8, 5], [27, 15, 64, 10], [32, 10, 18, 10], [32, 25, 12, 5], [36, 10, 4, 5], [36, 10, 16, 10], 
-    [36, 10, 64, 15], [36, 20, 96, 10], [48, 7, 18, 35], [48, 10, 12, 10], [64, 10, 3, 5], [64, 10, 9, 10], [64, 10, 27, 15], 
-    [64, 10, 81, 20], [64, 12, 18, 10], [64, 15, 6, 5], [64, 15, 36, 10], [64, 20, 72, 10], [64, 30, 12, 5], [72, 10, 8, 10], 
-    [72, 10, 64, 20], [81, 20, 8, 5], [81, 20, 64, 10], [96, 10, 6, 10], [96, 10, 36, 20]])
-
-    diff = []
-    for thing in low_ep[1]:
-        if thing not in high_ep[1]:
-            diff.append(thing)
-    print(diff)
-    """
