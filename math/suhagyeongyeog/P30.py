@@ -23,7 +23,7 @@ def main():
         print(final_sol)
         print(M + m -1)
     else:
-        print("No value of k has exactly {target_count} solutions.")
+        print(f"No value of k has exactly {target_count} solutions.")
 
 def cache_int_finder(k: int, ordered_pair_count: int):
     if k <= 2:
