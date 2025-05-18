@@ -7,7 +7,7 @@ fn main() {
 
     loop {
         println!("Enter the sides of your triangle separated by a space!");
-        let mut triange_edges = String::new();
+        let mut triange_edges = String::new(); // Empty string to put user input
 
         io::stdin()
             .read_line(&mut triange_edges)
@@ -20,11 +20,12 @@ fn main() {
             continue;
         }
 
+        // Parses string into u32, err result wrapper
         let a_val: Result<u32, _> = sides[0].parse();
         let b_val: Result<u32, _> = sides[1].parse();
         let c_val: Result<u32, _> = sides[2].parse();
 
-        let mut invalid_inputs = Vec::new();
+        let mut invalid_inputs = Vec::new(); // Array for error results
 
         if a_val.is_err() {
             invalid_inputs.push(sides[0]);
@@ -44,6 +45,7 @@ fn main() {
             continue;
         }
 
+        // Gets result from result wrapper
         side_a = a_val.unwrap();
         side_b = b_val.unwrap();
         side_c = c_val.unwrap();
