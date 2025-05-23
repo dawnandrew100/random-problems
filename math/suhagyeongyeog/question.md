@@ -15,9 +15,9 @@ which satisfy the following conditions.
 
 A) **a, b, c, d are greater than or equal to 2 and less than or equal to k.**
 
-B) **a**<sup><math><mfrac><mi>1</mi><mi>b</mi></mfrac></math></sup> *
-**b**<sup><math><mfrac><mi>1</mi><mi>c</mi></mfrac></math></sup> =
-**25**<sup><math><mfrac><mi>1</mi><mi>5</mi></mfrac></math></sup>
+B) <b>a</b><sup><math><mfrac><mn>1</mn><mi>b</mi></mfrac></math></sup> ×
+<b>c</b><sup><math><mfrac><mn>1</mn><mi>d</mi></mfrac></math></sup> =
+<b>24</b><sup><math><mfrac><mn>1</mn><mn>5</mn></mfrac></math></sup>
 
 Let M and m be the maximum and minimum values of k, respectively,
 so that the number of all ordered pairs (a, b, c, d) is 59.
