@@ -12,10 +12,9 @@ fn main() {
         println!("Which number would you like to find the prime factors of?");
 
         input.clear();
-        let Ok(_) = io::stdin().read_line(&mut input) else {
-            println!("Failed to read input. Try again.");
-            continue;
-        };
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read input");
 
         match input.trim().parse() {
             Ok(number) => num = number,
@@ -29,17 +28,16 @@ fn main() {
             }
         };
 
-        let primes_to_num = prime_factor_sieve(num);
+        let primes_to_num = prime_factor_faux_sieve(num);
         println!("{:?}\n", find_prime_factors(primes_to_num, num));
 
         let answer = loop {
             println!("Would you like to continue?\n1. yes\n2. no");
 
             input.clear();
-            let Ok(_) = io::stdin().read_line(&mut input) else {
-                println!("Failed to read input. Try again.");
-                continue;
-            };
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read input");
 
             let Ok(ans) = input.trim().parse::<u8>() else {
                 println!("Please enter 1 or 2!");
@@ -62,7 +60,7 @@ fn main() {
     }
 }
 
-fn prime_factor_sieve(target: u32) -> Vec<u32> {
+fn prime_factor_faux_sieve(target: u32) -> Vec<u32> {
     let upper_limit = (target as f64).sqrt() as u32;
     let poss_primes: Vec<u32> = (2..=upper_limit + 1)
         .filter(|&n| n == 2 || n % 2 != 0)
@@ -71,7 +69,13 @@ fn prime_factor_sieve(target: u32) -> Vec<u32> {
     let primes: Vec<u32> = poss_primes
         .iter()
         .cloned()
-        .filter(|&n| poss_primes.iter().filter(|&&x| x != n).all(|&x| n % x != 0))
+        .filter(|&n| {
+            poss_primes
+                .iter()
+                .filter(|&&x| x != n)
+                .take_while(|&&x| x * x <= n)
+                .all(|&x| n % x != 0)
+        })
         .collect();
     return primes;
 }
