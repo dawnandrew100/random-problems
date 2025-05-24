@@ -1,28 +1,50 @@
 use std::io;
 
 fn main() {
-    let num: u32 = loop {
-        println!("Which number would you like to find the prime factors of?");
+    loop {
+        let num: u32 = loop {
+            println!("Which number would you like to find the prime factors of?");
 
-        let mut input = String::new();
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Error reading input");
+            let mut input = String::new();
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Error reading input");
 
-        match input.trim().parse() {
-            Ok(number) => break number,
-            Err(_) => {
-                println!(
-                    "Please enter a valid number between {} and {}",
-                    u32::MIN,
-                    u32::MAX
-                );
-                continue;
-            }
+            match input.trim().parse() {
+                Ok(number) => break number,
+                Err(_) => {
+                    println!(
+                        "Please enter a valid number between {} and {}",
+                        u32::MIN,
+                        u32::MAX
+                    );
+                    continue;
+                }
+            };
         };
-    };
-    let primes_to_num = prime_factor_sieve(num);
-    println!("{:?}", find_prime_factors(primes_to_num, num));
+        let primes_to_num = prime_factor_sieve(num);
+        println!("{:?}\n", find_prime_factors(primes_to_num, num));
+
+        let mut answer: u8 = 0;
+        while answer != 1 && answer != 2 {
+            println!("Would you like to continue?\n1. yes\n2. no");
+
+            let mut input = String::new();
+            io::stdin()
+                .read_line(&mut input)
+                .expect("Error reading input");
+
+            answer = match input.trim().parse() {
+                Ok(number) => number,
+                Err(_) => continue,
+            };
+        }
+        match answer {
+            1 => continue,
+            2 => break,
+            _ => continue,
+        }
+    }
 }
 
 fn prime_factor_sieve(target: u32) -> Vec<u32> {
