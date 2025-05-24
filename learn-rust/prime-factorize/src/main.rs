@@ -1,48 +1,63 @@
 use std::io;
 
+enum Choice {
+    Yes,
+    No,
+}
+
 fn main() {
+    let mut input = String::new();
     loop {
-        let num: u32 = loop {
-            println!("Which number would you like to find the prime factors of?");
+        let num: u32;
+        println!("Which number would you like to find the prime factors of?");
 
-            let mut input = String::new();
-            io::stdin()
-                .read_line(&mut input)
-                .expect("Error reading input");
-
-            match input.trim().parse() {
-                Ok(number) => break number,
-                Err(_) => {
-                    println!(
-                        "Please enter a valid number between {} and {}",
-                        u32::MIN,
-                        u32::MAX
-                    );
-                    continue;
-                }
-            };
+        input.clear();
+        let Ok(_) = io::stdin().read_line(&mut input) else {
+            println!("Failed to read input. Try again.");
+            continue;
         };
+
+        match input.trim().parse() {
+            Ok(number) => num = number,
+            Err(_) => {
+                println!(
+                    "Please enter a valid number between {} and {}.",
+                    u32::MIN,
+                    u32::MAX,
+                );
+                continue;
+            }
+        };
+
         let primes_to_num = prime_factor_sieve(num);
         println!("{:?}\n", find_prime_factors(primes_to_num, num));
 
-        let mut answer: u8 = 0;
-        while answer != 1 && answer != 2 {
+        let answer = loop {
             println!("Would you like to continue?\n1. yes\n2. no");
 
-            let mut input = String::new();
-            io::stdin()
-                .read_line(&mut input)
-                .expect("Error reading input");
-
-            answer = match input.trim().parse() {
-                Ok(number) => number,
-                Err(_) => continue,
+            input.clear();
+            let Ok(_) = io::stdin().read_line(&mut input) else {
+                println!("Failed to read input. Try again.");
+                continue;
             };
-        }
+
+            let Ok(ans) = input.trim().parse::<u8>() else {
+                println!("Please enter 1 or 2!");
+                continue;
+            };
+
+            match ans {
+                1 => break Choice::Yes,
+                2 => break Choice::No,
+                _ => {
+                    println!("Please enter either 1 or 2!");
+                    continue;
+                }
+            }
+        };
         match answer {
-            1 => continue,
-            2 => break,
-            _ => continue,
+            Choice::Yes => continue,
+            Choice::No => break,
         }
     }
 }
