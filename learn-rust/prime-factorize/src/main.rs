@@ -32,7 +32,7 @@ fn main() {
         println!("{:?}\n", find_prime_factors(primes_to_num, num));
 
         let answer = loop {
-            println!("Would you like to continue?\n1. yes\n2. no");
+            println!("\nWould you like to continue?\n1. yes\n2. no");
 
             input.clear();
             io::stdin()
