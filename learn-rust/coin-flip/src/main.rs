@@ -1,40 +1,58 @@
-use rand::Rng;
-use std::io;
+use rand::{Rng, distr::slice::Choose};
+use std::{io, str::FromStr};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Flip {
     Heads,
     Tails,
 }
 
+#[derive(Clone, Copy)]
 enum Choice {
     Yes,
     No,
 }
 
+impl FromStr for Choice {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.trim().to_lowercase().as_str() {
+            "y" | "yes" | "1" => Ok(Choice::Yes),
+            "n" | "no" | "2" => Ok(Choice::No),
+            _ => Err("Please enter either Yes or No"),
+        }
+    }
+}
+
 fn main() -> std::io::Result<()> {
+    let flip_picker = Choose::new(&[Flip::Heads, Flip::Tails]).expect("Length is not zero!");
     let mut response = String::new();
     loop {
         println!("How many times would you like to flip the coin?");
         response.clear();
         io::stdin().read_line(&mut response)?;
 
-        let Ok(num_coin_flips) = response.trim().parse::<u32>() else {
-            println!(
-                "Please enter a valid number between {} and {}.",
-                u32::MIN,
-                u32::MAX
-            );
-            continue;
+        let num_coin_flips = match response.trim().parse::<usize>() {
+            Ok(n) => n,
+            Err(err) => {
+                eprintln!("{}", err);
+                continue;
+            }
         };
-        let chosen_range: Vec<u32> = (0..num_coin_flips)
-            .map(|_| rand::rng().random_range(1..=100))
-            .collect();
 
-        println!("{:?}", chosen_range);
-        let chosen_range: Vec<Flip> = chosen_range
-            .iter()
-            .map(|&n| if n % 2 == 0 { Flip::Heads } else { Flip::Tails })
+        /*
+        rand::rng().sample_iter(&flip_picker) creates an infinite stream
+        of choices from the flip picker.
+        .take(num_coin_flips) limits the iterator to the first n values
+        .copied() turns the enum references into values
+        (so the vector is Vec<Flip> instead of Vec<&Flip>)
+        .collect() turns the consumes the iterator and turns it into the vector
+         */
+        let chosen_range: Vec<Flip> = rand::rng()
+            .sample_iter(&flip_picker)
+            .take(num_coin_flips)
+            .copied()
             .collect();
 
         println!("{:?}", chosen_range);
@@ -49,18 +67,10 @@ fn main() -> std::io::Result<()> {
             response.clear();
             io::stdin().read_line(&mut response)?;
 
-            let Ok(ans) = response.trim().parse::<u8>() else {
-                println!("Please enter either 1 or 2!");
-                continue;
+            match response.trim().parse::<Choice>() {
+                Ok(choice) => break choice,
+                Err(err) => eprintln!("{}", err),
             };
-            match ans {
-                1 => break Choice::Yes,
-                2 => break Choice::No,
-                _ => {
-                    println!("Please enter either 1 or 2!");
-                    continue;
-                }
-            }
         };
 
         match decision {
