@@ -12,14 +12,12 @@ enum Choice {
     No,
 }
 
-fn main() {
+fn main() -> std::io::Result<()> {
     let mut response = String::new();
     loop {
         println!("How many times would you like to flip the coin?");
         response.clear();
-        io::stdin()
-            .read_line(&mut response)
-            .expect("Unable to read line");
+        io::stdin().read_line(&mut response)?;
 
         let Ok(num_coin_flips) = response.trim().parse::<u32>() else {
             println!(
@@ -46,12 +44,10 @@ fn main() {
 
         println!("You got {num_heads} heads and {num_tails} tails!");
 
-        println!("\nWould you like to continue?\n1. Yes\n2. No");
-        response.clear();
         let decision = loop {
-            io::stdin()
-                .read_line(&mut response)
-                .expect("Unable to read line");
+            println!("\nWould you like to continue?\n1. Yes\n2. No");
+            response.clear();
+            io::stdin().read_line(&mut response)?;
 
             let Ok(ans) = response.trim().parse::<u8>() else {
                 println!("Please enter either 1 or 2!");
@@ -69,7 +65,7 @@ fn main() {
 
         match decision {
             Choice::Yes => continue,
-            Choice::No => break,
+            Choice::No => break Ok(()),
         }
     }
 }
