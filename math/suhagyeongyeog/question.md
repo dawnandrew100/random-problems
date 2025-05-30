@@ -15,9 +15,10 @@ which satisfy the following conditions.
 
 A) **a, b, c, d are greater than or equal to 2 and less than or equal to k.**
 
-B) <b>a</b><sup><math><mfrac><mn>1</mn><mi>b</mi></mfrac></math></sup> ×
-<b>c</b><sup><math><mfrac><mn>1</mn><mi>d</mi></mfrac></math></sup> =
-<b>24</b><sup><math><mfrac><mn>1</mn><mn>5</mn></mfrac></math></sup>
+B) ![Formula](https://latex.codecogs.com/png.latex?%5Cbg_white%20%5Cmathbf%7Ba%7D%5E%7B%5Cfrac%7B1%7D%7Bb%7D%7D%20%5Ctimes%20%5Cmathbf%7Bc%7D%5E%7B%5Cfrac%7B1%7D%7Bd%7D%7D%20%3D%20%5Cmathbf%7B24%7D%5E%7B%5Cfrac%7B1%7D%7B5%7D%7D
+)
+
+
 
 Let M and m be the maximum and minimum values of k, respectively,
 so that the number of all ordered pairs (a, b, c, d) is 59.
