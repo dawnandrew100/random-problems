@@ -8,7 +8,7 @@ enum Choice {
 fn main() {
     let mut input = String::new();
     loop {
-        let num: u32;
+        let num: u64;
         println!("Which number would you like to find the prime factors of?");
 
         input.clear();
@@ -21,15 +21,14 @@ fn main() {
             Err(_) => {
                 println!(
                     "Please enter a valid number between {} and {}.",
-                    u32::MIN,
-                    u32::MAX,
+                    u64::MIN,
+                    u64::MAX,
                 );
                 continue;
             }
         };
 
-        let primes_to_num = prime_factor_faux_sieve(num);
-        println!("{:?}\n", find_prime_factors(primes_to_num, num));
+        println!("{:?}\n", find_prime_factors(num));
 
         let answer = loop {
             println!("\nWould you like to continue?\n1. yes\n2. no");
@@ -60,37 +59,23 @@ fn main() {
     }
 }
 
-fn prime_factor_faux_sieve(target: u32) -> Vec<u32> {
-    let upper_limit = (target as f64).sqrt() as u32;
-    let poss_primes: Vec<u32> = (2..=upper_limit + 1)
-        .filter(|&n| n == 2 || n % 2 != 0)
-        .collect();
+fn find_prime_factors(number: u64) -> Vec<u64> {
+    let mut n = number;
+    let mut factor = 2;
+    let mut prime_factors: Vec<u64> = Vec::new();
 
-    let primes: Vec<u32> = poss_primes
-        .iter()
-        .cloned()
-        .filter(|&n| {
-            poss_primes
-                .iter()
-                .filter(|&&x| x != n)
-                .take_while(|&&x| x * x <= n)
-                .all(|&x| n % x != 0)
-        })
-        .collect();
-    return primes;
-}
-
-fn find_prime_factors(primes: Vec<u32>, target: u32) -> Vec<u32> {
-    let mut remainder = target;
-    let mut prime_factors = Vec::new();
-    for num in primes {
-        while remainder % num == 0 {
-            prime_factors.push(num);
-            remainder = remainder / num;
+    while factor * factor <= n {
+        if n % factor == 0 {
+            while n % factor == 0 {
+                prime_factors.push(factor);
+                n /= factor;
+            }
         }
+        factor += if factor == 2 { 1 } else { 2 };
     }
-    if remainder != 1 {
-        prime_factors.push(remainder);
+
+    if n > 1 {
+        prime_factors.push(n);
     }
     return prime_factors;
 }
