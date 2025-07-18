@@ -10,7 +10,7 @@
 
 - Topics: Data Types, Numbers, Operations, Type Conversion, f-Strings
 
-**Day 3 Project: [Treasure Island Hunt](https://github.com/dawnandrew100/100-days-of-code/tree/main/Day03)**
+**Day 3 Project: [Treasure Island Hunt](https://github.com/dawnandrew100/100-days-of-code/tree/main/src/Beginner/Day03)**
 
 - Topics: Conditional Statements, Logical Operators, Code Blocks and Scope
 
