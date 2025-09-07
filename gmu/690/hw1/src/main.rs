@@ -83,7 +83,12 @@ fn plot_points(droplet_area: &Vec<(f64, f64)>, tf: f64) -> Result<(), Box<dyn st
 
     let file_folder = "plotters-doc-data";
     let file_name = format!("droplet_area_{tf}_min");
-    let path_name = format!("{file_folder}/{file_name}.png");
+    let path_name = format!(
+        "{}/{}/{}.png",
+        env!("CARGO_MANIFEST_DIR"), // project root (folder where Cargo.toml is located)
+        file_folder,
+        file_name
+    );
     let path_name_ref: &str = &path_name;
     let root = BitMapBackend::new(path_name_ref, (1280, 960)).into_drawing_area();
     let _ = root.fill(&WHITE);
