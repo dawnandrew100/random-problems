@@ -6,7 +6,7 @@ fn main() {
     let initial_radius = 3.0; // mm
     let evaporation_rate = 0.1; // mm/min
     let initial_time = 0.0; // mins
-    let final_time = 10.0; //mins
+    let final_time = 35.0; //mins
     let time_step_size = 0.25; // mins
     let (t, v_array, rf) = droplet_num_sol(
         evaporation_rate,
@@ -22,45 +22,44 @@ fn main() {
     };
 }
 
-fn droplet_num_sol(k: f64, ti: f64, tf: f64, ri: f64, dt: f64) -> (f64, Vec<(f64, f64)>, f64) {
+fn droplet_num_sol(k: f64, t0: f64, tf: f64, ri: f64, dt: f64) -> (f64, Vec<(f64, f64)>, f64) {
     // a = surface area
     // Given Equation = dv/dt = -kA
     // Equation for volume of hemisphere = v = 2/3 * pi * r^3
-    // volume in terms of r = cuberoot((v*3)/(2*pi))
     // Equation for surface area of hemisphere= a = 2 * pi * r^2
-    let mut t = ti;
+    // Numerical solution R(ti+1) = R(ti) - k(ti+1 - ti)
+    let mut ti = t0;
+    let mut ti_1 = ti + dt;
     let mut r = ri;
     let mut v = (2.0 / 3.0) * PI * r * r * r;
-    let mut a = 2.0 * PI * r * r;
     let n = (tf - ti) / dt;
 
     let mut v_array = Vec::new();
     // Add initial conditions to vector
-    v_array.push((t, v));
+    v_array.push((ti, v));
     // Calculate remaining volumes
     for _ in 1..=n as usize {
-        let dvdt = -k * a;
-        v = v + dvdt * dt;
-        t = t + dt;
-        r = ((3.0 * v) / (2.0 * PI)).cbrt();
-        a = 2.0 * PI * r * r;
+        r = r - k * (ti_1 - ti);
+        ti = ti_1;
+        ti_1 = ti + dt;
+        v = (2.0 / 3.0) * PI * r * r * r;
         if v <= 0.0 {
             r = 0.0;
-            v_array.push((t, 0.0));
+            v_array.push((ti, 0.0));
             break;
         };
-        v_array.push((t, v));
+        v_array.push((ti, v));
     }
-    let time_rem = ((tf - t) / dt) as usize;
+    let time_rem = ((tf - ti) / dt) as usize;
     // Prevents unnecessary calculations when droplet is gone
     if time_rem > 0 {
         for _ in 1..=time_rem {
-            t += dt;
-            v_array.push((t, 0.0));
+            ti += dt;
+            v_array.push((ti, 0.0));
         }
     }
 
-    (t, v_array, r)
+    (ti, v_array, r)
 }
 
 fn plot_points(droplet_area: &Vec<(f64, f64)>, tf: f64) -> Result<(), Box<dyn std::error::Error>> {
