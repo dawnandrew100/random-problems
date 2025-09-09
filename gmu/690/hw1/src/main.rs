@@ -31,7 +31,8 @@ fn droplet_num_sol(k: f64, t0: f64, tf: f64, ri: f64, dt: f64) -> (f64, Vec<(f64
     let mut ti = t0;
     let mut ti_1 = ti + dt;
     let mut r = ri;
-    let mut v = (2.0 / 3.0) * PI * r * r * r;
+    let volume = |r: f64| (2.0 / 3.0) * PI * r * r * r;
+    let mut v = volume(r);
     let n = (tf - ti) / dt;
 
     let mut v_array = Vec::new();
@@ -42,7 +43,7 @@ fn droplet_num_sol(k: f64, t0: f64, tf: f64, ri: f64, dt: f64) -> (f64, Vec<(f64
         r = r - k * (ti_1 - ti);
         ti = ti_1;
         ti_1 = ti + dt;
-        v = (2.0 / 3.0) * PI * r * r * r;
+        v = volume(r);
         if v <= 0.0 {
             r = 0.0;
             v_array.push((ti, 0.0));
