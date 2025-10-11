@@ -41,7 +41,7 @@ where
     let mut step = step_size;
     let (mut gx, mut gy) = grad(x, y);
 
-    for i in 0..imax {
+    for i in 1..=imax {
         // linear search
         while f(x - step * gx, y - step * gy) > f(x, y) - tol * step * (gx * gx + gy * gy) {
             step *= 0.5;
