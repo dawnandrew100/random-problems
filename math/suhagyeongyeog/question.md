@@ -2,7 +2,7 @@
 
 This question is based on a Korean College entrance question
 that was mistakenly assigned to highschool-aged teens
-due to a mathematical error by the person who created the question.
+due to an error with assessing the mathematical difficulty by the person who created the question.
 
 The original question is:
 
@@ -10,8 +10,8 @@ The original question is:
 
 The translation of the question is:
 
-For a natural number k with 2 ≤ k < 500, four natural numbers (a , b , c , d)
-which satisfy the following conditions.
+For a natural number k bounded in the range 2 ≤ k < 500, find four natural numbers (a , b , c , d)
+which satisfy the following conditions:
 
 A) **a, b, c, d are greater than or equal to 2 and less than or equal to k.**
 
