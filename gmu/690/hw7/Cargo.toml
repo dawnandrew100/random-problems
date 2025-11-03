@@ -1,0 +1,7 @@
+[package]
+name = "hw7"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+spindalis = { git = "https://github.com/lignum-vitae/spindalis.git" }
