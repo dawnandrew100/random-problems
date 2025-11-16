@@ -29,8 +29,8 @@ dependencies = [
 
 [[package]]
 name = "spindalis"
-version = "0.4.3"
-source = "git+https://github.com/lignum-vitae/spindalis.git#44eab0608308718595c697f75a5a3a1500db82e8"
+version = "0.4.4"
+source = "git+https://github.com/lignum-vitae/spindalis.git#2040bbf110cce5e0d584d4750e219af94bf2c62f"
 dependencies = [
  "spindalis_core",
  "spindalis_macros",
@@ -39,12 +39,12 @@ dependencies = [
 [[package]]
 name = "spindalis_core"
 version = "0.2.0"
-source = "git+https://github.com/lignum-vitae/spindalis.git#44eab0608308718595c697f75a5a3a1500db82e8"
+source = "git+https://github.com/lignum-vitae/spindalis.git#2040bbf110cce5e0d584d4750e219af94bf2c62f"
 
 [[package]]
 name = "spindalis_macros"
 version = "0.1.0"
-source = "git+https://github.com/lignum-vitae/spindalis.git#44eab0608308718595c697f75a5a3a1500db82e8"
+source = "git+https://github.com/lignum-vitae/spindalis.git#2040bbf110cce5e0d584d4750e219af94bf2c62f"
 dependencies = [
  "quote",
  "spindalis_core",
