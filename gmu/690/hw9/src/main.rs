@@ -36,7 +36,7 @@ fn main() {
                 match result {
                     Ok((value, vector)) => println!(
                         "Smallest Eigen Value = {:.4}\nVector:\n{}",
-                        (1_f64 / value).sqrt(),
+                        1_f64 / value,
                         vector.round_to_decimal(5),
                     ),
                     Err(e) => eprintln!("{e:?}"),
