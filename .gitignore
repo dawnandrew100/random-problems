@@ -1,4 +1,5 @@
 *.exe
 *.pdb
+.venv/
 target/
 .python-version
