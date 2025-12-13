@@ -41,8 +41,9 @@ pub fn ralston_rk2(yi: f64, ti: f64, tf: f64, step_size: f64) -> f64 {
     for _ in 1..=steps {
         let k1 = derivs(t, y);
 
-        let ym = y + k1 * step_size / 2.0;
-        let k2 = derivs(t + step_size / 2.0, ym);
+        let xi = t + step_size * (3.0/4.0);
+        let yi = y + k1 * step_size * (3.0/4.0);
+        let k2 = derivs(xi, yi);
 
         let slope = ((1.0 / 3.0) * k1) + ((2.0 / 3.0) * k2);
         y += slope * step_size;
@@ -59,14 +60,17 @@ fn rk4(yi: f64, ti: f64, tf: f64, step_size: f64) -> f64 {
     for _ in 1..=steps {
         let k1 = derivs(t, y);
 
-        let ym = y + k1 * step_size / 2.0;
-        let k2 = derivs(t + step_size / 2.0, ym);
+        let xi = t + step_size / 2.0;
+        let yi = y + k1 * step_size / 2.0;
+        let k2 = derivs(xi, yi);
 
-        let ym = y + k2 * step_size / 2.0;
-        let k3 = derivs(t + step_size / 2.0, ym);
+        let xi = t + step_size / 2.0;
+        let yi = y + k2 * step_size / 2.0;
+        let k3 = derivs(xi, yi);
 
-        let ye = y + k3 * step_size;
-        let k4 = derivs(t + step_size, ye);
+        let xi = t + step_size;
+        let yi = y + k3 * step_size;
+        let k4 = derivs(xi, yi);
 
         let slope = (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0;
 
