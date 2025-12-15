@@ -41,8 +41,8 @@ pub fn ralston_rk2(yi: f64, ti: f64, tf: f64, step_size: f64) -> f64 {
     for _ in 1..=steps {
         let k1 = derivs(t, y);
 
-        let xi = t + step_size * (3.0/4.0);
-        let yi = y + k1 * step_size * (3.0/4.0);
+        let xi = t + step_size * (3.0 / 4.0);
+        let yi = y + k1 * step_size * (3.0 / 4.0);
         let k2 = derivs(xi, yi);
 
         let slope = ((1.0 / 3.0) * k1) + ((2.0 / 3.0) * k2);

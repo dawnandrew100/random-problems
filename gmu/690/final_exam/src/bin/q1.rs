@@ -6,16 +6,24 @@ fn main() {
     let degree = 5;
     for order in 0..=degree {
         println!("Interpolation degree: {order}");
-        let (coeffs, evaled_point, ea) = new_int(&x, &fx, order, point);
+        let (coeffs, all_predictions, final_prediction, ea) = new_int(&x, &fx, order, point);
         println!("Interpolated coeffs for degree {order} polynomial = {coeffs:?}");
+        println!(
+            "Estimated value of f({point}) for degrees up to a degree {order} polynomial = {all_predictions:?}"
+        );
         println!("Estimated error vector = {ea:?}");
-        println!("Function evaluated at point {point} = {evaled_point:.5}\n");
+        println!("Function evaluated at point {point} = {final_prediction:.5}\n");
     }
 }
 
 #[allow(clippy::needless_range_loop)]
 #[allow(clippy::mut_range_bound)]
-fn new_int(x: &[f64], y: &[f64], degree: usize, eval_point: f64) -> (Vec<f64>, f64, Vec<f64>) {
+fn new_int(
+    x: &[f64],
+    y: &[f64],
+    degree: usize,
+    eval_point: f64,
+) -> (Vec<f64>, Vec<f64>, f64, Vec<f64>) {
     let degree = degree + 1;
     let mut fdd = vec![vec![0.0; degree]; degree];
     let mut yint = vec![0.0; degree];
@@ -30,26 +38,12 @@ fn new_int(x: &[f64], y: &[f64], degree: usize, eval_point: f64) -> (Vec<f64>, f
     }
     let mut xterm = 1.0;
     yint[0] = fdd[0][0];
-    for i in 1..degree {
-        xterm *= eval_point - x[i];
-        let yint2 = yint[i - 1] + fdd[0][i] * xterm;
-        ea[i - 1] = yint2 - yint[i - 1];
-        yint[i] = yint2;
+    for order in 1..degree {
+        xterm *= eval_point - x[order - 1];
+        let yint2 = yint[order - 1] + fdd[0][order] * xterm;
+        ea[order - 1] = yint2 - yint[order - 1];
+        yint[order] = yint2;
     }
 
-    let mut expanded_poly: Vec<f64> = vec![fdd[0][0]];
-    let mut degree = 1;
-    let mut term = 0.0;
-    for i in 1..degree {
-        term += fdd[0][i];
-        for j in 0..degree {
-            term *= eval_point - x[j];
-        }
-        expanded_poly.push(term);
-        degree += 1;
-        term = 0.0;
-    }
-    let evaluated_point = expanded_poly.into_iter().sum::<f64>();
-
-    (fdd[0].clone(), evaluated_point, ea)
+    (fdd[0].clone(), yint.clone(), yint[degree - 1], ea)
 }
