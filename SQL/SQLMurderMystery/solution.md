@@ -17,14 +17,20 @@ AND type = 'murder'
 | 20180115 |	murder |	Security footage shows that there were 2 witnesses. The first witness lives at the last house on "Northwestern Dr". The second witness, named Annabel, lives somewhere on "Franklin Ave".	| SQL City |
 
 ```sql
-SELECT * FROM person
-WHERE address_street_name = 'Northwestern Dr'
-ORDER BY address_number DESC
-LIMIT 1
-
-SELECT * FROM person
-WHERE name LIKE 'Annabel%'
-AND address_street_name = 'Franklin Ave'
+SELECT * FROM (
+  SELECT * 
+  FROM person 
+  WHERE address_street_name = 'Northwestern Dr' 
+  ORDER BY address_number DESC 
+  LIMIT 1
+)
+UNION
+SELECT * FROM (
+  SELECT * 
+  FROM person 
+  WHERE name LIKE 'Annabel%' 
+    AND address_street_name = 'Franklin Ave'
+)
 ```
 
 | id	| name |	license_id	| address_number	| address_street_name |	ssn |
